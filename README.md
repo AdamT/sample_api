@@ -16,4 +16,4 @@ TODO
 * Keep it simple
 
 ### Built with
-Ruby, Sinatra, Mongodb
+Ruby, Sinatra, Mongodb, miniTest
