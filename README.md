@@ -10,7 +10,7 @@ TODO
 * Input validations
 * REST
 * Proper documentation
-* Default html index page for instructions
+* Default html Help page for instructions
 * Versioning? (is that a no-no?)
 * Unit tests with miniTest
 * Keep it simple
