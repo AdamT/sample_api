@@ -17,8 +17,22 @@ get "/index.json" do
 end
 
 get "/seed" do
-  User.create(full_name: "John Smith", email: "a@b.c", url: "http://www.google.com")
+  User.create(full_name: "John Smith",
+              email: "a@b.c",
+              url: "http://www.google.com")
+
   redirect "/"
+end
+
+get "/clean" do
+  Comment.delete_all
+  Post.delete_all
+  User.delete_all
+end
+
+get "/help" do
+  # TODO
+  # load help page
 end
 
 def index_response
