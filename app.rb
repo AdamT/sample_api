@@ -28,6 +28,8 @@ get "/clean" do
   Comment.delete_all
   Post.delete_all
   User.delete_all
+  
+  redirect "/"
 end
 
 get "/help" do
