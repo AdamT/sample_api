@@ -2,6 +2,7 @@ require 'sinatra'
 require "sinatra/namespace"
 require 'json'
 require 'mongoid'
+require 'pry'
 
 require './models/post'
 require './models/user'
@@ -9,64 +10,96 @@ require './models/comment'
 
 Mongoid.load!("config/mongoid.yml")
 
-namespace "/v1" do
-  get "/" do
-    index_response
-  end
-
-  get "/blog" do
-    "hi"
-  end
+get "/" do
+  index_response
 end
 
 get "/index.json" do
   index_response
 end
 
-# show all posts
-get "/posts" do
-end
+namespace "/api/0.0.1" do
 
-# create a post
-post "/posts/create" do
-end
+  # show all posts
+  get "/posts" do
+    Post.all.to_json
+  end
 
-# delete a post
-delete "/posts/:post_id/delete" do
-end
+  # create a post
+  post "/posts/create" do
+    Post.create(title: params[:title], 
+                author: params[:author], 
+                content: params[:content])
+  end
 
-# show a post
-get "/posts/:post_id" do
-end
+  # delete a post
+  delete "/posts/:post_id/delete" do
+    post = Post.find(params[:post_id])
+    post.delete
+  end
 
-# comment on post
-post "/posts/:post_id/comments/create" do
-end
+  # show a post
+  get "/posts/:post_id" do
+    post = Post.find(params[:post_id])
+    post.to_json
+  end
 
-# show post comment
-get "/posts/:post_id/comments/:comment_id" do
-end
+  # comment on post
+  post "/posts/:post_id/comments/create" do
+    post = Post.find(params[:post_id])
+    post.comments.create(author: params[:author],
+                         content: params[:content])
+  end
 
-# show all users
-get "/users" do
-end
+  # show post comment
+  get "/posts/:post_id/comments/:comment_id" do
+    post = Post.find(params[:post_id])
+    comment = Post.comments.find(params[:comment_id])
+    comment.to_json
+  end
 
-# show user
-get "/users/:id" do
-end
+  # show post comments
+  get "/posts/:post_id/comments" do
+    post = Post.find(params[:post_id])
+    post.comments.to_json
+  end
 
-# create user
-post "/users/create" do
-end
+  # show all comments
+  get "/comments" do
+    Comment.all.to_json
+  end
 
-# show user posts
-get "/users/:user_id/posts" do
-end
+  # show all users
+  get "/users" do
+    User.all.to_json
+  end
 
-# show user comments
-get "/users/:user_id/comments" do
-end
+  # show user
+  get "/users/:user_id" do
+    user = User.find(params[:user_id])
+    user.to_json
+  end
 
+  # create user
+  post "/users/create" do
+    User.create(full_name: params[:full_name],
+                email: params[:email],
+                url: params[:url])
+  end
+
+  # show user posts
+  get "/users/:user_id/posts" do
+    user = User.find(params[:user_id])
+    user.posts.to_json
+  end
+
+  # show user comments
+  get "/users/:user_id/comments" do
+    user = User.find(params[:user_id])
+    user.comments.to_json
+  end
+
+end
 
 # quick seed
 get "/seed" do
